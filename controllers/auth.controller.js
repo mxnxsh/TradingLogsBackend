@@ -6,7 +6,7 @@ export const signin = async (req, res) => {
    try {
       // Validate the user and sign a JWT token
       const { email } = req.body;
-
+      // same
       const payload = { email };
       const token = signToken(payload); // Use the signToken function here
 
