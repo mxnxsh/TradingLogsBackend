@@ -1,7 +1,7 @@
-const cache = require('./cache');
+import cache from './cache';
 
 function getCachedSecret(secretName) {
    return cache.get(secretName);
 }
 
-module.exports = { getCachedSecret };
+export default { getCachedSecret };

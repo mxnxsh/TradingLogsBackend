@@ -1,12 +1,12 @@
-const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
-const { Readable } = require('stream');
-const { Upload } = require('@aws-sdk/lib-storage');
-const fs = require('fs');
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { Readable } from 'stream';
+import { Upload } from '@aws-sdk/lib-storage';
+import { createReadStream } from 'fs';
 
 const s3 = new S3Client({ region: process.env.REGION });
 
 const uploadToS3 = (filePath, key, bucket) => {
-   const fileStream = fs.createReadStream(filePath);
+   const fileStream = createReadStream(filePath);
    const upload = new Upload({
       client: s3,
       queueSize: 4,
@@ -68,7 +68,7 @@ const getFromS3WithMetadata = (key, bucket) => {
    });
 };
 
-module.exports = {
+export default {
    uploadToS3,
    getFromS3,
    getFromS3WithMetadata,

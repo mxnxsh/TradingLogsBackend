@@ -1,12 +1,16 @@
-const {
+import dotenv from 'dotenv';
+dotenv.config();
+import {
    SecretsManagerClient,
    GetSecretValueCommand,
-} = require('@aws-sdk/client-secrets-manager');
-const cache = require('./cache');
-const util = require('util');
+} from '@aws-sdk/client-secrets-manager';
+import cache from './cache.js';
 
 // Initialize Secrets Manager client
-console.log(process.env.REGION);
+const region = process.env.REGION;
+if (!region) {
+   throw new Error('AWS region is not defined in environment variables.');
+}
 const secretsManager = new SecretsManagerClient({ region: process.env.REGION });
 
 // Function to retrieve a secret by name
@@ -37,11 +41,10 @@ async function getSecret(secretName) {
 
 function getSecretSync(secretName) {
    if (cache.get(secretName)) {
-      // If the secret is in the cache, return it
       return cache.get(secretName);
    } else {
       return null;
    }
 }
 
-module.exports = { getSecret, getSecretSync };
+export default { getSecret, getSecretSync };

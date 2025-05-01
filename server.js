@@ -1,24 +1,19 @@
-const dotenv = require('dotenv');
-const path = require('path');
-dotenv.config({ path: path.resolve(__dirname, '.env') });
-const express = require('express');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
-const cors = require('cors');
-const fs = require('fs');
-const secrets = require('./app/libs/aws/secrets');
+import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
+import bodyParser from 'body-parser';
+import morgan from 'morgan';
+import cors from 'cors';
+import secrets from './libs/aws/secrets.js';
+import authRoutes from './routes/auth.route.js';
 
 // Load environment variables
 const { text, json, urlencoded } = bodyParser;
-
-// const appConfig = require('./app/config/app.config');
+import './models/db.model.js';
 const startServer = async () => {
    try {
       // await secrets.getSecret('DB_SECRET');
 
-      // await secrets.getSecret('CONFIG_SECRET');
-
-      // await secrets.getSecret('KEY_SECRET');
       const app = express();
       const corsOptions = {
          origin: '',
@@ -53,26 +48,7 @@ const startServer = async () => {
          next();
       });
       app.get('/health', async (req, res) => {
-         return res.status(200).send('Valuenable');
-      });
-
-      app.use((error, req, res, next) => {
-         if (error instanceof SyntaxError) {
-            return res.status(400).send({ message: 'Invalid JSON syntax.' });
-         } else if (error instanceof ReferenceError) {
-            return res
-               .status(500)
-               .send({ message: 'Reference error, check your code!' });
-         } else if (error instanceof RangeError) {
-            return res.status(400).send({ message: 'Range Error.' });
-         } else if (error.code === 'ENOENT') {
-            return res
-               .status(500)
-               .send({ message: 'File or resource not found!' });
-         } else {
-            console.error('Unhandled Error:', error);
-            return res.status(500).send({ message: 'Internal Server Error.' });
-         }
+         return res.status(200).send('Health is great in trading logs...');
       });
 
       app.use(morgan('dev'));
@@ -97,6 +73,8 @@ const startServer = async () => {
             next();
          }
       });
+      app.use('/', authRoutes);
+
       // set port, listen for requests
       const PORT = process.env.PORT || 3000;
       app.listen(PORT, () => {
