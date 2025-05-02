@@ -26,4 +26,4 @@ connection.getConnection((err, conn) => {
    }
 });
 
-export default connection.promise();
+export const sql = connection.promise();

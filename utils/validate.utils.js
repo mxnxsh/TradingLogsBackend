@@ -1,4 +1,5 @@
 // utils/validate.js
+import { commonPasswords } from '../common/commonPasswords.common.js';
 
 /**
  * @param {Object[]} rules - Array of field validation rules
@@ -10,10 +11,10 @@
  * @returns {{ success: boolean, message?: string, status?: number }}
  */
 export function validate(rules, body) {
-   if (!body || typeof body !== 'object' || Object.keys(body).length === 0) {
+   if (!body || typeof body !== 'object') {
       return {
          success: false,
-         message: 'Request body is missing or empty',
+         message: 'Request body is missing or invalid.',
          status: 400,
       };
    }
@@ -26,6 +27,14 @@ export function validate(rules, body) {
             success: false,
             message: `Missing required field: ${rule.field}`,
             status: 400,
+         };
+      }
+
+      if (rule.field === 'password' && commonPasswords.has(value)) {
+         return {
+            success: false,
+            message: 'Password is too common. Please choose a stronger one.',
+            status: 422,
          };
       }
 

@@ -1,0 +1,15 @@
+export const commonPasswords = new Set([
+   '123456',
+   'password',
+   '123456789',
+   'qwerty',
+   '12345678',
+   '111111',
+   '123123',
+   'abc123',
+   'password1',
+   '1234',
+   'admin',
+   'letmein',
+   'querty123',
+]);
